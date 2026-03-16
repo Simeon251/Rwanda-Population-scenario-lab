@@ -1,0 +1,11 @@
+{
+  "latest_actual_year": 2024,
+  "latest_actual_population": 14256567,
+  "holdout_mae": 1046192.57,
+  "holdout_mape": 7.99,
+  "sample_forecast": {
+    "Year": 2030,
+    "Population": 15227554,
+    "Series": "Forecast"
+  }
+}
