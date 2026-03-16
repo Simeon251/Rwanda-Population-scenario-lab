@@ -3,7 +3,14 @@ from __future__ import annotations
 import pandas as pd
 import streamlit as st
 
-from utils import WORLD_BANK_SOURCE_URL, build_default_model, build_forecast_series, predict_population
+from utils import (
+    WORLD_BANK_SOURCE_URL,
+    build_default_model,
+    build_feature_importance_rows,
+    build_forecast_series,
+    build_scenario_comparison_series,
+    predict_population,
+)
 
 
 st.set_page_config(
@@ -86,6 +93,16 @@ with metric_col:
     st.subheader("Forecast")
     st.metric("Projected population", f"{prediction:,}", f"{delta:+,} vs {latest_year}")
     st.write(f"Projected change from {latest_year}: **{growth_pct:+.2f}%**")
+    if model.holdout_mape < model.baseline_holdout_mape:
+        st.caption(
+            f"Model holdout MAPE: {model.holdout_mape:.2f}% "
+            f"vs baseline {model.baseline_holdout_mape:.2f}%."
+        )
+    else:
+        st.caption(
+            f"Model holdout MAPE: {model.holdout_mape:.2f}% "
+            f"(baseline: {model.baseline_holdout_mape:.2f}%)."
+        )
 
 with insight_col:
     st.subheader("Scenario Summary")
@@ -107,6 +124,15 @@ chart_df = forecast_df.pivot(index="Year", columns="Series", values="Population"
 st.subheader("Historical Trend And Scenario Forecast")
 st.line_chart(chart_df, height=380)
 
+comparison_df = pd.DataFrame(
+    build_scenario_comparison_series(model, history, year, fertility, life_exp, migration)
+)
+comparison_chart_df = comparison_df.pivot(index="Year", columns="Series", values="Population")
+
+st.subheader("Scenario Comparison")
+st.caption("These companion paths help you compare your chosen assumptions against lower-growth, higher-growth, and recent-trend cases.")
+st.line_chart(comparison_chart_df, height=380)
+
 with st.expander("Model notes and diagnostics"):
     st.write(
         "This version fetches Rwanda data live from the World Bank Indicators API and rebuilds the "
@@ -114,8 +140,21 @@ with st.expander("Model notes and diagnostics"):
     )
     st.write(f"Holdout MAE: **{model.holdout_mae:,.0f} people**")
     st.write(f"Holdout MAPE: **{model.holdout_mape:.2f}%**")
+    st.write(f"Baseline holdout MAE: **{model.baseline_holdout_mae:,.0f} people**")
+    st.write(f"Baseline holdout MAPE: **{model.baseline_holdout_mape:.2f}%**")
+    if model.holdout_mape <= model.baseline_holdout_mape:
+        st.success("The scenario model currently outperforms the simple trend baseline on the holdout window.")
+    else:
+        st.warning(
+            "The simple trend baseline currently beats the scenario model on the holdout window, "
+            "so treat custom forecasts as exploratory scenario outputs rather than best-available predictions."
+        )
     st.write("The cached API response refreshes every 12 hours, or immediately when you press Refresh data.")
     st.write("Use the output as a scenario estimate rather than an official census projection.")
+
+st.subheader("Feature Importance")
+feature_importance_df = pd.DataFrame(build_feature_importance_rows(model))
+st.dataframe(feature_importance_df, use_container_width=True, hide_index=True)
 
 st.subheader("Recent Historical Data")
 history_df = pd.DataFrame(history)

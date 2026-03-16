@@ -7,7 +7,9 @@ Rwanda Population Scenario Lab is a Streamlit app for exploring how fertility, l
 - Live Rwanda demographic data from the World Bank Indicators API
 - Interactive scenario controls for fertility, life expectancy, and net migration
 - Forecast chart combining historical data with user-defined projections
-- Simple model diagnostics with holdout MAE and MAPE
+- Scenario comparison chart with lower-growth, higher-growth, and recent-trend paths
+- Model diagnostics with holdout MAE and MAPE plus a simple baseline benchmark
+- Feature importance view showing which inputs most influence the forecast
 - Rebuildable model summary artifact in `model/model_summary.json`
 
 ## Project Structure

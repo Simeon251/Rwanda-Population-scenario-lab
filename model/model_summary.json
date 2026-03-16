@@ -1,11 +1,40 @@
 {
-  "latest_actual_year": 2024,
-  "latest_actual_population": 14256567,
-  "holdout_mae": 1046192.57,
-  "holdout_mape": 7.99,
+  "source": "https://datahelpdesk.worldbank.org/knowledgebase/articles/889392-about-the-indicators-api-documentation",
+  "latest_actual_year": 2023,
+  "latest_actual_population": 13954471,
+  "holdout_mae": 1025590.42,
+  "holdout_mape": 8.0,
+  "baseline_holdout_mae": 84038.66,
+  "baseline_holdout_mape": 0.64,
+  "feature_importance": [
+    {
+      "feature": "Year offset",
+      "importance": 26.93
+    },
+    {
+      "feature": "Fertility rate",
+      "importance": 17.28
+    },
+    {
+      "feature": "Life expectancy",
+      "importance": 16.82
+    },
+    {
+      "feature": "Net migration",
+      "importance": 1.64
+    },
+    {
+      "feature": "Previous population",
+      "importance": 28.46
+    },
+    {
+      "feature": "Fertility x life expectancy",
+      "importance": 8.87
+    }
+  ],
   "sample_forecast": {
-    "Year": 2030,
-    "Population": 15227554,
+    "Year": 2029,
+    "Population": 14544642,
     "Series": "Forecast"
   }
 }

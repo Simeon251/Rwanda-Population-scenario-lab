@@ -25,6 +25,12 @@ def main() -> None:
         "latest_actual_population": model.latest_actual_population,
         "holdout_mae": round(model.holdout_mae, 2),
         "holdout_mape": round(model.holdout_mape, 2),
+        "baseline_holdout_mae": round(model.baseline_holdout_mae, 2),
+        "baseline_holdout_mape": round(model.baseline_holdout_mape, 2),
+        "feature_importance": [
+            {"feature": feature, "importance": round(importance, 2)}
+            for feature, importance in zip(model.feature_names, model.feature_importance)
+        ],
         "sample_forecast": forecast[-1],
     }
 
